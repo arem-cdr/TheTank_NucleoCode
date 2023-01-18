@@ -2,15 +2,15 @@
 
 void printVallaray(std::valarray<double> array)
 {
-    Serial.print("$ ");
-    Serial.print(array[0]);
-    Serial.print(" ");
-    Serial.print(array[1]);
-    Serial.print(" ");
-    Serial.print(array[2]);
-    Serial.print(" ");
-    Serial.print(array[3]);
-    Serial.println(" ;");
+    // Serial.print("$ ");
+    // Serial.print(array[0]);
+    // Serial.print(" ");
+    // Serial.print(array[1]);
+    // Serial.print(" ");
+    // Serial.print(array[2]);
+    // Serial.print(" ");
+    // Serial.print(array[3]);
+    // Serial.println(" ;");
 
 }
 

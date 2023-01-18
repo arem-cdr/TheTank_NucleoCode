@@ -78,8 +78,8 @@ bool Odometrie::update()
 
         // Calcul des déplacements dans le référentiel du terrain
         n_theta = theta + wz*ellapsed_s;
-        n_x = x + vx*ellapsed_s*cos(theta + (wz*ellapsed_s)/2 ) + vy*ellapsed_s*sin(theta + (wz*ellapsed_s)/2 );
-        n_y = y - vx*ellapsed_s*sin(theta + (wz*ellapsed_s)/2 ) + vy*ellapsed_s*cos(theta + (wz*ellapsed_s)/2 );
+        n_x = x + vx*ellapsed_s*cos(theta + (wz*ellapsed_s)/2 ) - vy*ellapsed_s*sin(theta + (wz*ellapsed_s)/2 );
+        n_y = y + vx*ellapsed_s*sin(theta + (wz*ellapsed_s)/2 ) + vy*ellapsed_s*cos(theta + (wz*ellapsed_s)/2 );
       
         etat.versPosition(n_x, n_y, n_theta, ellapsed);
        
@@ -149,7 +149,7 @@ void Odometrie::compute_encoders_to_robot(const double *w1, const double *w2, co
     // |wz|         |-1/(L1+L2)  1/(L1+L2)  -1/(L1+L2)  1/(L1+L2)|   |w4|
 
     *vx = ((double)RayonRoues/4.0) * (*w1 + *w2 + *w3 + *w4);
-    *vy = ((double)RayonRoues/4.0) * (*w1 - *w2 - *w3 + *w4);
+    *vy = -((double)RayonRoues/4.0) * (*w1 - *w2 - *w3 + *w4);
     *wz = ((double)RayonRoues/(4.0*(L1pL2))) * (-*w1 + *w2 - *w3 + *w4);
 }
 
@@ -161,10 +161,10 @@ void Odometrie::compute_robot_to_encoders(const double *vx, const double *vy, co
     // |w3| = 1/R * |1     -1     -(L1+L2)| x |wz|
     // |w4|         |1      1     -(L1+L2)|
 
-    *w1 = (1.0/((double)RayonRoues)) * (*vx - *vy + (L1pL2)*(*wz));
-    *w2 = (1.0/((double)RayonRoues)) * (*vx + *vy - (L1pL2)*(*wz));
-    *w3 = (1.0/((double)RayonRoues)) * (*vx + *vy + (L1pL2)*(*wz));
-    *w4 = (1.0/((double)RayonRoues)) * (*vx - *vy - (L1pL2)*(*wz));
+    *w1 = (1.0/((double)RayonRoues)) * (*vx + *vy + (L1pL2)*(*wz));
+    *w2 = (1.0/((double)RayonRoues)) * (*vx - *vy - (L1pL2)*(*wz));
+    *w3 = (1.0/((double)RayonRoues)) * (*vx - *vy + (L1pL2)*(*wz));
+    *w4 = (1.0/((double)RayonRoues)) * (*vx + *vy - (L1pL2)*(*wz));
 }
 
 void Odometrie::setRayonRoues(double newRayon)
