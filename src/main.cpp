@@ -31,6 +31,9 @@ float offset_imu_vel_Z = 0.0;
 
 float gravity = 9.80417;
 
+bool reset_odo = false;
+bool last_reset_odo = false;
+
 nav_msgs::Odometry odo_ros;
 sensor_msgs::Imu imu_ros;
 
@@ -83,6 +86,14 @@ void parameter_cb(const std_msgs::Bool& update_msg)
   nh.getParam("/robot_dynamic_param/offset_imu_acc_Y",&offset_imu_acc_Y);
   nh.getParam("/robot_dynamic_param/offset_imu_vel_Z",&offset_imu_vel_Z);
   nh.getParam("/robot_dynamic_param/gravity_constant",&gravity);
+  nh.getParam("/robot_dynamic_param/reset_odo",&reset_odo);
+  if(reset_odo != last_reset_odo)
+  {
+    odo->setX(INIT_X);
+    odo->setY(INIT_Y);
+    odo->setTheta(INIT_THETA);
+    last_reset_odo = reset_odo;
+  }
   odo->setRayonRoues(global_RayonRoues);
   odo->setL1pL2(global_L1pL2);
   if(millis() > timerBlink + 50)
