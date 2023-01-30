@@ -51,6 +51,7 @@ double Vtheta_setpoint = 0.0;
 
 double w1,w2,w3,w4 = 0;
 
+
 char world[] = "map";
 char odom[] = "odom";
 
@@ -66,7 +67,7 @@ ros::NodeHandle  nh;
 void speed_cb( const geometry_msgs::Twist& cmd_msg){
 
   Vx_setpoint = cmd_msg.linear.x*1000.0;
-  Vy_setpoint = cmd_msg.linear.y*100.0;
+  Vy_setpoint = cmd_msg.linear.y*1000.0;
   Vtheta_setpoint = cmd_msg.angular.z;
   odo->compute_robot_to_encoders(&Vx_setpoint,&Vy_setpoint,&Vtheta_setpoint,&w1,&w2,&w3,&w4);
   control->define_setpoint(w1,w2,w3,w4);
@@ -112,6 +113,7 @@ ros::Subscriber<std_msgs::Bool> sub2("parameter_update", parameter_cb);
 ros::Publisher pub("nav_msgs/odo", &odo_ros);
 ros::Publisher pub_imu("sensor_msgs/Imu", &imu_ros);
 tf::TransformBroadcaster odom_broadcaster;
+tf::TransformBroadcaster lidar_broadcaster;
 
 
 
@@ -129,7 +131,8 @@ void setup() {
   AccGyr.begin();
   AccGyr.ACC_Enable();  
   AccGyr.GYRO_Enable();
-
+  AccGyr.ACC_SetFullScale(ISM330DHCX_16g);
+  
 
   
 
@@ -137,6 +140,7 @@ void setup() {
  
 
   odom_broadcaster.init(nh);
+  lidar_broadcaster.init(nh);
   timerBlink = millis();
   pinMode(LED_BUILTIN,OUTPUT);
   digitalWrite(LED_BUILTIN,HIGH);
@@ -160,6 +164,13 @@ void setup() {
   nh.advertise(pub);
   nh.advertise(pub_imu);
   timer = millis();
+  
+  
+  geometry_msgs::Quaternion lidar_quat = tf::createQuaternionFromYaw(PI);
+  geometry_msgs::TransformStamped lidar_trans;
+  lidar_trans.header.frame_id = "base_link";
+  lidar_trans.header.child_frame_id = "laserscan";
+  lidar_trans.transform.rotation = lidar_quat;
 
   
   
@@ -179,6 +190,7 @@ void loop() {
     control->update_controller(false,false);
     int32_t accelerometer[3];
     int32_t gyroscope[3];
+    
     AccGyr.ACC_GetAxes(accelerometer);  
     AccGyr.GYRO_GetAxes(gyroscope);
     ros::Time current_time = nh.now();
@@ -196,9 +208,12 @@ void loop() {
     odom_trans.transform.translation.y = odo->getY()/1000.0;
     odom_trans.transform.translation.z = 0.0;   
     odom_trans.transform.rotation = odom_quat;
+    
+    lidar_trans.stamp = current_time;
 
     //send the transform
     odom_broadcaster.sendTransform(odom_trans);
+    lidar_broadcaster.sendTrandform(lidar_trans);
 
     //next, we'll publish the odometry message over ROS
     nav_msgs::Odometry odom;
