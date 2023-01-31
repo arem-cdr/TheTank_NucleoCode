@@ -114,6 +114,7 @@ ros::Publisher pub("nav_msgs/odo", &odo_ros);
 ros::Publisher pub_imu("sensor_msgs/Imu", &imu_ros);
 tf::TransformBroadcaster odom_broadcaster;
 tf::TransformBroadcaster lidar_broadcaster;
+geometry_msgs::TransformStamped lidar_trans;
 
 
 
@@ -167,9 +168,9 @@ void setup() {
   
   
   geometry_msgs::Quaternion lidar_quat = tf::createQuaternionFromYaw(PI);
-  geometry_msgs::TransformStamped lidar_trans;
   lidar_trans.header.frame_id = "base_link";
-  lidar_trans.header.child_frame_id = "laserscan";
+
+  lidar_trans.child_frame_id = "laserscan";
   lidar_trans.transform.rotation = lidar_quat;
 
   
@@ -209,11 +210,11 @@ void loop() {
     odom_trans.transform.translation.z = 0.0;   
     odom_trans.transform.rotation = odom_quat;
     
-    lidar_trans.stamp = current_time;
+    lidar_trans.header.stamp= current_time;
 
     //send the transform
     odom_broadcaster.sendTransform(odom_trans);
-    lidar_broadcaster.sendTrandform(lidar_trans);
+    lidar_broadcaster.sendTransform(lidar_trans);
 
     //next, we'll publish the odometry message over ROS
     nav_msgs::Odometry odom;
