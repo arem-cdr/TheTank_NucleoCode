@@ -309,6 +309,13 @@ void loop() {
       tab_wheelSetpoints[1] = w2;
       tab_wheelSetpoints[2] = w3;
       tab_wheelSetpoints[3] = w4;
+      std::vector<double> toprint = encoder->GetSpeeds();
+      for(int i = 0; i< 4; i++)
+      {
+        tab_readings[i] = toprint[i];
+      }
+      pub_setpoint_wheel_speeds.publish(&wheelSetpoints);
+      pub_wheel_speeds.publish(&readings);
       
     }
 
