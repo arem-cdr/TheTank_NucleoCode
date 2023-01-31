@@ -18,6 +18,7 @@
 #include <global.h>
 #include <std_msgs/Bool.h>
 #include <sensor_msgs/Imu.h>
+#include <std_msgs/Float32MultiArray.h>
 
 #include <Wire.h>
 #include <ISM330DHCXSensor.h>
@@ -33,6 +34,7 @@ float gravity = 9.80417;
 
 bool reset_odo = false;
 bool last_reset_odo = false;
+bool tuning_mode = false;
 
 nav_msgs::Odometry odo_ros;
 sensor_msgs::Imu imu_ros;
@@ -44,6 +46,24 @@ uint32_t timer;
 int printVar;
 SpeedPIDController* control;
 uint32_t timerBlink;
+
+
+float ku_m1_fd=0.135;
+float ku_m2_fg=0.1326;
+float ku_m3_bd=0.1675;
+float ku_m4_bg=0.127;
+
+int rate_ms = 30;
+
+bool m1_enable = true;
+bool m2_enable = true;
+bool m3_enable = true;
+bool m4_enable = true;
+
+std_msgs::Float32MultiArray wheelSetpoints;
+std_msgs::Float32MultiArray readings;
+float tab_wheelSetpoints[4] {0.0,0.0,0.0,0.0};
+float tab_readings[4] {0.0,0.0,0.0,0.0};
 
 double Vx_setpoint = 0.0;
 double Vy_setpoint = 0.0;
@@ -66,16 +86,19 @@ ros::NodeHandle  nh;
 
 void speed_cb( const geometry_msgs::Twist& cmd_msg){
 
+
   Vx_setpoint = cmd_msg.linear.x*1000.0;
   Vy_setpoint = cmd_msg.linear.y*1000.0;
   Vtheta_setpoint = cmd_msg.angular.z;
   odo->compute_robot_to_encoders(&Vx_setpoint,&Vy_setpoint,&Vtheta_setpoint,&w1,&w2,&w3,&w4);
-  control->define_setpoint(w1,w2,w3,w4);
+  control->define_setpoint(w1*m1_enable,w2*m2_enable,w3*m3_enable,w4*m4_enable);
   if(millis() > timerBlink + 500)
   {
     digitalToggle(LED_BUILTIN);
     timerBlink = millis();
   }
+
+
   
 }
 
@@ -88,6 +111,24 @@ void parameter_cb(const std_msgs::Bool& update_msg)
   nh.getParam("/robot_dynamic_param/offset_imu_vel_Z",&offset_imu_vel_Z);
   nh.getParam("/robot_dynamic_param/gravity_constant",&gravity);
   nh.getParam("/robot_dynamic_param/reset_odo",&reset_odo);
+  nh.getParam("/robot_dynamic_param/tuning_mode",&tuning_mode);
+  nh.getParam("robot_dynamic_param/Ku_m1_fd",&ku_m1_fd);
+  nh.getParam("robot_dynamic_param/Ku_m2_fg",&ku_m2_fg);
+  nh.getParam("robot_dynamic_param/Ku_m3_bd",&ku_m3_bd);
+  nh.getParam("robot_dynamic_param/Ku_m4_bg",&ku_m4_bg);
+  nh.getParam("robot_dynamic_param/m1_enable",&m1_enable);
+  nh.getParam("robot_dynamic_param/m2_enable",&m1_enable);
+  nh.getParam("robot_dynamic_param/m3_enable",&m1_enable);
+  nh.getParam("robot_dynamic_param/m4_enable",&m1_enable);
+  nh.getParam("robot_dynamic_param/rate_ms",&rate_ms);
+  if(tuning_mode = true)
+  {
+    control->set_calib(ku_m1_fd,ku_m2_fg,ku_m3_bd,ku_m4_bg);
+  }
+  else
+  {
+    control->unset_calib(ku_m1_fd,ku_m2_fg,ku_m3_bd,ku_m4_bg);
+  }
   if(reset_odo != last_reset_odo)
   {
     odo->setX(INIT_X);
@@ -97,6 +138,9 @@ void parameter_cb(const std_msgs::Bool& update_msg)
   }
   odo->setRayonRoues(global_RayonRoues);
   odo->setL1pL2(global_L1pL2);
+  odo->set_min_update_period_us(1000*rate_ms);
+  control->set_rate(rate_ms);
+  
   if(millis() > timerBlink + 50)
   {
     digitalToggle(LED_BUILTIN);
@@ -112,6 +156,8 @@ ros::Subscriber<geometry_msgs::Twist> sub("cmd_vel", speed_cb);
 ros::Subscriber<std_msgs::Bool> sub2("parameter_update", parameter_cb);
 ros::Publisher pub("nav_msgs/odo", &odo_ros);
 ros::Publisher pub_imu("sensor_msgs/Imu", &imu_ros);
+ros::Publisher pub_setpoint_wheel_speeds("calib/setpoint_wheels", &wheelSetpoints);
+ros::Publisher pub_wheel_speeds("calib/wheel_speeds", &readings);
 tf::TransformBroadcaster odom_broadcaster;
 tf::TransformBroadcaster lidar_broadcaster;
 geometry_msgs::TransformStamped lidar_trans;
@@ -125,6 +171,12 @@ void setup() {
   // Serial.begin(115200);
   nh.getHardware()->setBaud(115200);
   nh.initNode();
+  readings.data_length = 4;
+  wheelSetpoints.data_length = 4;
+  readings.data = tab_readings;
+  wheelSetpoints.data = tab_wheelSetpoints;
+
+
   Wire.begin();
   Wire.setClock(400000);
 
@@ -134,8 +186,9 @@ void setup() {
   AccGyr.GYRO_Enable();
   AccGyr.ACC_SetFullScale(ISM330DHCX_16g);
   
-
-  
+  std_msgs::Bool dummyMsg;
+  dummyMsg.data = true;
+  parameter_cb(dummyMsg);
 
   
  
@@ -149,8 +202,8 @@ void setup() {
   delay(3000);
   printVar = 0;
   encoder =  new Encoder4Mot();
-  odo = new Odometrie(30000,encoder);
-  control = new SpeedPIDController(mot,encoder,30);
+  odo = new Odometrie(1000*rate_ms,encoder);
+  control = new SpeedPIDController(mot,encoder,rate_ms);
 
 
 
@@ -164,6 +217,8 @@ void setup() {
   nh.subscribe(sub2);
   nh.advertise(pub);
   nh.advertise(pub_imu);
+  nh.advertise(pub_setpoint_wheel_speeds);
+  nh.advertise(pub_wheel_speeds);
   timer = millis();
   
   
@@ -186,7 +241,7 @@ void loop() {
 
 
  
-  if(odo->update())
+  if(odo->update() && tuning_mode == false)
   {
     control->update_controller(false,false);
     int32_t accelerometer[3];
@@ -244,6 +299,18 @@ void loop() {
     pub.publish(&odom);
     pub_imu.publish(&imu_ros);
     
+
+  }
+  else if (tuning_mode)
+  {
+    if(control->update_controller())
+    {
+      tab_wheelSetpoints[0] = w1;
+      tab_wheelSetpoints[1] = w2;
+      tab_wheelSetpoints[2] = w3;
+      tab_wheelSetpoints[3] = w4;
+      
+    }
 
   }
   nh.spinOnce();

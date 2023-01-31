@@ -46,7 +46,7 @@ class Odometrie
         double getRayonRoues(); // get rayon rayon des roues théoriques pour les calculs de la position 
         double getL1pl2(); //get valeur de L1 + L2 théorique pour les calculs de positions
         uint32_t get_min_update_period_us(); // get min_uptate_periode_us
-
+        uint32_t set_min_update_period_us(uint32_t new_period){_min_update_period_us = new_period;};
     
 
     private:

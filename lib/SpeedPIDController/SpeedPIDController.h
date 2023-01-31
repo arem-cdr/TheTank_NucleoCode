@@ -39,6 +39,20 @@ class SpeedPIDController // Classe pour asservir la vitesse des moteurs
             setpoint_speed-=setpoint_speed;
             motors->motors_stop();
         };
+        void set_calib(double ku_1, double ku_2, double ku_3, double ku_4)
+        {
+            Kd = {0.0,0.0,0.0,0.0};
+            Ki = {0.0,0.0,0.0,0.0};
+            Kp = {ku_1,ku_2,ku_3,ku_4};
+        };
+        void unset_calib(double ku_1, double ku_2, double ku_3, double ku_4)
+        {
+            Ku = {ku_1,ku_2,ku_3,ku_4};
+            Ki = 1.2*(Ku*delta)/(Tosc);
+            Kd = 0.3*(Ku*Tosc)/(4*delta);
+            Kp = 0.6*Ku-0.5*Ki;
+        };
+        void set_rate(uint32_t new_rate_ms) {rate_ms = new_rate_ms;};
 };
 
 
