@@ -17,6 +17,7 @@
 #include <nav_msgs/Odometry.h>
 #include <global.h>
 #include <std_msgs/Bool.h>
+#include <std_msgs/Int8.h>
 #include <sensor_msgs/Imu.h>
 #include <std_msgs/Float32MultiArray.h>
 
@@ -48,10 +49,10 @@ SpeedPIDController* control;
 uint32_t timerBlink;
 
 
-float ku_m1_fd=0.135;
-float ku_m2_fg=0.1326;
-float ku_m3_bd=0.1675;
-float ku_m4_bg=0.127;
+float ku_m1_fd=0.12;
+float ku_m2_fg=0.12;
+float ku_m3_bd=0.12;
+float ku_m4_bg=0.12;
 
 int rate_ms = 30;
 
@@ -102,44 +103,111 @@ void speed_cb( const geometry_msgs::Twist& cmd_msg){
   
 }
 
-void parameter_cb(const std_msgs::Bool& update_msg)
+void parameter_cb(const std_msgs::Int8 & update_msg)
 {
-  nh.getParam("/robot_dynamic_param/wheelRadius_mm",&global_RayonRoues);
-  nh.getParam("/robot_dynamic_param/L1pL2_mm",&global_L1pL2);
-  nh.getParam("/robot_dynamic_param/offset_imu_acc_X", &offset_imu_acc_X);
-  nh.getParam("/robot_dynamic_param/offset_imu_acc_Y",&offset_imu_acc_Y);
-  nh.getParam("/robot_dynamic_param/offset_imu_vel_Z",&offset_imu_vel_Z);
-  nh.getParam("/robot_dynamic_param/gravity_constant",&gravity);
-  nh.getParam("/robot_dynamic_param/reset_odo",&reset_odo);
-  nh.getParam("/robot_dynamic_param/tuning_mode",&tuning_mode);
-  nh.getParam("robot_dynamic_param/Ku_m1_fd",&ku_m1_fd);
-  nh.getParam("robot_dynamic_param/Ku_m2_fg",&ku_m2_fg);
-  nh.getParam("robot_dynamic_param/Ku_m3_bd",&ku_m3_bd);
-  nh.getParam("robot_dynamic_param/Ku_m4_bg",&ku_m4_bg);
-  nh.getParam("robot_dynamic_param/m1_enable",&m1_enable);
-  nh.getParam("robot_dynamic_param/m2_enable",&m1_enable);
-  nh.getParam("robot_dynamic_param/m3_enable",&m1_enable);
-  nh.getParam("robot_dynamic_param/m4_enable",&m1_enable);
-  nh.getParam("robot_dynamic_param/rate_ms",&rate_ms);
-  if(tuning_mode = true)
+  if( update_msg.data == 0)
   {
-    control->set_calib(ku_m1_fd,ku_m2_fg,ku_m3_bd,ku_m4_bg);
+   
+    nh.getParam("/robot_dynamic_param/wheelRadius_mm",&global_RayonRoues);
+    odo->setRayonRoues(global_RayonRoues);
   }
-  else
+  else if( update_msg.data == 1)
   {
-    control->unset_calib(ku_m1_fd,ku_m2_fg,ku_m3_bd,ku_m4_bg);
+   
+    nh.getParam("/robot_dynamic_param/L1pL2_mm",&global_L1pL2);
+    odo->setL1pL2(global_L1pL2);
   }
-  if(reset_odo != last_reset_odo)
+  else if( update_msg.data == 2)
   {
+   
+    nh.getParam("/robot_dynamic_param/offset_imu_acc_X", &offset_imu_acc_X);
+  }
+  else if( update_msg.data == 3)
+  {
+   
+    nh.getParam("/robot_dynamic_param/offset_imu_acc_Y",&offset_imu_acc_Y);
+  }
+  else if( update_msg.data == 4)
+  {
+   
+    nh.getParam("/robot_dynamic_param/offset_imu_vel_Z",&offset_imu_vel_Z);
+  }
+  else if( update_msg.data == 5)
+  {
+   
+    nh.getParam("/robot_dynamic_param/gravity_constant",&gravity);
+  }
+  else if( update_msg.data == 6)
+  {
+   
+    nh.getParam("/robot_dynamic_param/reset_odo",&reset_odo);
     odo->setX(INIT_X);
     odo->setY(INIT_Y);
     odo->setTheta(INIT_THETA);
     last_reset_odo = reset_odo;
   }
-  odo->setRayonRoues(global_RayonRoues);
-  odo->setL1pL2(global_L1pL2);
-  odo->set_min_update_period_us(1000*rate_ms);
-  control->set_rate(rate_ms);
+  else if( update_msg.data == 7)
+  {
+   
+    nh.getParam("/robot_dynamic_param/tuning_mode",&tuning_mode);
+    if(tuning_mode == true)
+    {
+      control->set_calib(ku_m1_fd,ku_m2_fg,ku_m3_bd,ku_m4_bg);
+    }
+    else
+    {
+      control->unset_calib(ku_m1_fd,ku_m2_fg,ku_m3_bd,ku_m4_bg);
+    }
+  }
+  else if( update_msg.data == 8)
+  {
+   
+    nh.getParam("robot_dynamic_param/Ku_m1_fd",&ku_m1_fd);
+  }
+  else if( update_msg.data == 9)
+  {
+   
+    nh.getParam("robot_dynamic_param/Ku_m2_fg",&ku_m2_fg);
+  }
+  else if( update_msg.data == 10)
+  {
+   
+    nh.getParam("robot_dynamic_param/Ku_m3_bd",&ku_m3_bd);
+  }
+  else if( update_msg.data == 11)  
+  {
+   
+    nh.getParam("robot_dynamic_param/Ku_m4_bg",&ku_m4_bg);
+  }
+  else if( update_msg.data == 12)  
+  {
+   
+    nh.getParam("robot_dynamic_param/m1_enable",&m1_enable);
+  }
+  else if( update_msg.data == 13)  
+  {
+   
+    nh.getParam("robot_dynamic_param/m2_enable",&m2_enable);
+  }
+  else if( update_msg.data == 14)  
+  {
+   
+    nh.getParam("robot_dynamic_param/m3_enable",&m3_enable);
+  }
+  else if( update_msg.data == 15)  
+  {
+   
+    nh.getParam("robot_dynamic_param/m4_enable",&m4_enable);
+  }
+  else if( update_msg.data == 16)  
+  {
+   
+    nh.getParam("robot_dynamic_param/rate_ms",&rate_ms);
+    odo->set_min_update_period_us(1000*rate_ms);
+    control->set_rate(rate_ms);
+ }
+
+
   
   if(millis() > timerBlink + 50)
   {
@@ -153,7 +221,7 @@ void parameter_cb(const std_msgs::Bool& update_msg)
 
 
 ros::Subscriber<geometry_msgs::Twist> sub("cmd_vel", speed_cb);
-ros::Subscriber<std_msgs::Bool> sub2("parameter_update", parameter_cb);
+ros::Subscriber<std_msgs::Int8> sub2("parameter_update", parameter_cb);
 ros::Publisher pub("nav_msgs/odo", &odo_ros);
 ros::Publisher pub_imu("sensor_msgs/Imu", &imu_ros);
 ros::Publisher pub_setpoint_wheel_speeds("calib/setpoint_wheels", &wheelSetpoints);
@@ -171,10 +239,13 @@ void setup() {
   // Serial.begin(115200);
   nh.getHardware()->setBaud(115200);
   nh.initNode();
-  readings.data_length = 4;
-  wheelSetpoints.data_length = 4;
-  readings.data = tab_readings;
+
+  wheelSetpoints.data_length=4;
+  readings.data_length=4;
   wheelSetpoints.data = tab_wheelSetpoints;
+  readings.data = tab_readings;
+  
+  
 
 
   Wire.begin();
@@ -186,9 +257,9 @@ void setup() {
   AccGyr.GYRO_Enable();
   AccGyr.ACC_SetFullScale(ISM330DHCX_16g);
   
-  std_msgs::Bool dummyMsg;
-  dummyMsg.data = true;
-  parameter_cb(dummyMsg);
+  // std_msgs::Bool dummyMsg;
+  // dummyMsg.data = true;
+  // parameter_cb(dummyMsg);
 
   
  
@@ -217,6 +288,7 @@ void setup() {
   nh.subscribe(sub2);
   nh.advertise(pub);
   nh.advertise(pub_imu);
+  
   nh.advertise(pub_setpoint_wheel_speeds);
   nh.advertise(pub_wheel_speeds);
   timer = millis();
@@ -225,7 +297,7 @@ void setup() {
   geometry_msgs::Quaternion lidar_quat = tf::createQuaternionFromYaw(PI);
   lidar_trans.header.frame_id = "base_link";
 
-  lidar_trans.child_frame_id = "laserscan";
+  lidar_trans.child_frame_id = "laser";
   lidar_trans.transform.rotation = lidar_quat;
 
   
@@ -305,17 +377,74 @@ void loop() {
   {
     if(control->update_controller())
     {
-      tab_wheelSetpoints[0] = w1;
-      tab_wheelSetpoints[1] = w2;
-      tab_wheelSetpoints[2] = w3;
-      tab_wheelSetpoints[3] = w4;
+      tab_wheelSetpoints[0] = (float) w1;
+      tab_wheelSetpoints[1] = (float) w2;
+      tab_wheelSetpoints[2] = (float) w3;
+      tab_wheelSetpoints[3] = (float) w4;
       std::vector<double> toprint = encoder->GetSpeeds();
       for(int i = 0; i< 4; i++)
       {
         tab_readings[i] = toprint[i];
       }
+
       pub_setpoint_wheel_speeds.publish(&wheelSetpoints);
       pub_wheel_speeds.publish(&readings);
+      
+      int32_t accelerometer[3];
+      int32_t gyroscope[3];
+    
+      AccGyr.ACC_GetAxes(accelerometer);  
+      AccGyr.GYRO_GetAxes(gyroscope);
+      ros::Time current_time = nh.now();
+
+
+      geometry_msgs::Quaternion odom_quat = tf::createQuaternionFromYaw(odo->getThetaRadian());
+
+      //first, we'll publish the transform over tf
+      geometry_msgs::TransformStamped odom_trans;
+      odom_trans.header.stamp = current_time;
+      odom_trans.header.frame_id = "odom";
+      odom_trans.child_frame_id = "base_link";
+
+      odom_trans.transform.translation.x = odo->getX()/1000.0;
+      odom_trans.transform.translation.y = odo->getY()/1000.0;
+      odom_trans.transform.translation.z = 0.0;   
+      odom_trans.transform.rotation = odom_quat;
+      
+      lidar_trans.header.stamp= current_time;
+
+      //send the transform
+      odom_broadcaster.sendTransform(odom_trans);
+      lidar_broadcaster.sendTransform(lidar_trans);
+
+      //next, we'll publish the odometry message over ROS
+      nav_msgs::Odometry odom;
+      odom.header.stamp = current_time;
+      odom.header.frame_id = "odom";
+
+      //set the position
+      odom.pose.pose.position.x = odo->getX()/1000.0;
+      odom.pose.pose.position.y = odo->getY()/1000.0;
+      odom.pose.pose.position.z = 0.0;
+      odom.pose.pose.orientation = odom_quat;
+
+      //set the velocity
+      odom.child_frame_id = "base_link";
+      odom.twist.twist.linear.x = odo->getVXEnco()/1000.0;
+      odom.twist.twist.linear.y = odo->getVYEnco()/1000.0;
+      odom.twist.twist.angular.z = odo->getVThetaEnco();
+
+      imu_ros.angular_velocity.z = (PI*((float)gyroscope[2]))/(180.0*1000.0)    - offset_imu_vel_Z;
+      imu_ros.linear_acceleration.x = (gravity)*((float)accelerometer[0])/(1000.0) - offset_imu_acc_X;
+      imu_ros.linear_acceleration.y = (gravity)*((float)accelerometer[1])/(1000.0) - offset_imu_acc_Y;
+      imu_ros.header.stamp = current_time;
+      imu_ros.header.frame_id = "base_link";
+      
+
+      pub.publish(&odom);
+      pub_imu.publish(&imu_ros);
+      odom_broadcaster.sendTransform(odom_trans);
+      lidar_broadcaster.sendTransform(lidar_trans);
       
     }
 

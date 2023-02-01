@@ -18,7 +18,7 @@ SpeedPIDController::SpeedPIDController(uint32_t input_rate_ms) : Kp(4,0),  Ki(4,
 e(4,0),  ei(4,0), ed(4,0), rate_ms(input_rate_ms), lastCall_date_ms(millis()), Ku(4,0), Tosc(4,0),setpoint_speed(4,0)
 {
     delta = ((double)rate_ms)/1000.0;
-    Ku = {0.135,0.1326,0.1675,0.127};
+    Ku = {0.12,0.12,0.12,0.12};
     Tosc = {2*delta,2*delta,2*delta,2*delta};
 
     // Kd = {0.0,0.0,0.0,0.0};
