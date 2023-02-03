@@ -21,7 +21,7 @@
 
 
 #define TICKS_PAR_TOUR 1320 // correspond à la précision de l'encodeur magnétique
-#define RAYON_ROUE 97 // Placeholder, a mesurer // en mm
+#define RAYON_ROUE 48.5 // Placeholder, a mesurer // en mm
 
 
 #define L1 365 // A MESURER // en mm ; Largeur entre le centre du robot et le milieu d'une roue (milieu vers gauche par rapport à l'avant)
