@@ -27,9 +27,9 @@
 #define dev_interface       Wire
 ISM330DHCXSensor AccGyr(&dev_interface);
 
-float offset_imu_acc_X = 0.0;
-float offset_imu_acc_Y = 0.0;
-float offset_imu_vel_Z = 0.0;
+float offset_imu_acc_X = -0.0008;
+float offset_imu_acc_Y = -0.206;
+float offset_imu_vel_Z = -0.003;
 
 float gravity = 9.80417;
 
