@@ -566,7 +566,7 @@ void loop() {
     }
 
   }
-  if(millis() > timerstart + 15000 && updateparam < 17)
+  if(millis() > timerstart + 15000 && updateparam < 16)
   {
 
     
