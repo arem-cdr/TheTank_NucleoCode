@@ -273,6 +273,10 @@ void parameter_cb(const std_msgs::Int8 & update_msg)
       nh.loginfo("Failed to get param 12 \n");
       
     } 
+    else
+    {
+      nh.loginfo("got param 12 \n");
+    }
   }
 
   else if( update_msg.data == 13)  
@@ -284,6 +288,10 @@ void parameter_cb(const std_msgs::Int8 & update_msg)
       
       nh.loginfo("Failed to get param 13 \n");
       
+    }
+    else
+    {
+      nh.loginfo("got param 13 \n");
     }
   }
 
@@ -297,6 +305,11 @@ void parameter_cb(const std_msgs::Int8 & update_msg)
       nh.loginfo("Failed to get param 14 \n");
       
     }
+    else
+    {
+      nh.loginfo("got param 14 \n");
+    }
+    
   }
 
   else if( update_msg.data == 15)  
@@ -308,6 +321,10 @@ void parameter_cb(const std_msgs::Int8 & update_msg)
       
       nh.loginfo("Failed to get param 15 \n");
       
+    }
+    else
+    {
+      nh.loginfo("got param 15 \n");
     }
   }
   // else if( update_msg.data == 16)  
