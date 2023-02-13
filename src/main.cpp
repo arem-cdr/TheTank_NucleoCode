@@ -96,6 +96,10 @@ void speed_cb( const geometry_msgs::Twist& cmd_msg){
   Vtheta_setpoint = cmd_msg.angular.z;
   odo->compute_robot_to_encoders(&Vx_setpoint,&Vy_setpoint,&Vtheta_setpoint,&w1,&w2,&w3,&w4);
   control->define_setpoint(w1*m1_enable,w2*m2_enable,w3*m3_enable,w4*m4_enable);
+  wheelSetpoints.data[0] = w1*m1_enable;
+  wheelSetpoints.data[1] = w2*m2_enable;
+  wheelSetpoints.data[2] = w3*m3_enable;
+  wheelSetpoints.data[3] = w4*m4_enable;
   if(millis() > timerBlink + 500)
   {
     digitalToggle(LED_BUILTIN);
@@ -446,7 +450,7 @@ void loop() {
 
 
  
-  if(odo->update() && tuning_mode == false)
+  if(odo->update())
   {
     control->update_controller(false,false);
     int32_t accelerometer[3];
@@ -503,85 +507,18 @@ void loop() {
 
     pub.publish(&odom);
     pub_imu.publish(&imu_ros);
+    pub_setpoint_wheel_speeds.publish(&wheelSetpoints);
+    std::vector<double> toprint = encoder->GetSpeeds();
+    readings.data[0] = toprint[0];
+    readings.data[1] = toprint[1];
+    readings.data[2] = toprint[2];
+    readings.data[3] = toprint[3];
+    pub_wheel_speeds.publish(&readings);
     
 
   }
-  else if (tuning_mode)
-  {
-    if(control->update_controller())
-    {
-      tab_wheelSetpoints[0] = (float) w1;
-      tab_wheelSetpoints[1] = (float) w2;
-      tab_wheelSetpoints[2] = (float) w3;
-      tab_wheelSetpoints[3] = (float) w4;
-      std::vector<double> toprint = encoder->GetSpeeds();
-      for(int i = 0; i< 4; i++)
-      {
-        tab_readings[i] = toprint[i];
-      }
 
-      pub_setpoint_wheel_speeds.publish(&wheelSetpoints);
-      pub_wheel_speeds.publish(&readings);
-      
-      int32_t accelerometer[3];
-      int32_t gyroscope[3];
-    
-      AccGyr.ACC_GetAxes(accelerometer);  
-      AccGyr.GYRO_GetAxes(gyroscope);
-      ros::Time current_time = nh.now();
-
-
-      geometry_msgs::Quaternion odom_quat = tf::createQuaternionFromYaw(odo->getThetaRadian());
-
-      //first, we'll publish the transform over tf
-      geometry_msgs::TransformStamped odom_trans;
-      odom_trans.header.stamp = current_time;
-      odom_trans.header.frame_id = "odom";
-      odom_trans.child_frame_id = "base_link";
-
-      odom_trans.transform.translation.x = odo->getX()/1000.0;
-      odom_trans.transform.translation.y = odo->getY()/1000.0;
-      odom_trans.transform.translation.z = 0.0;   
-      odom_trans.transform.rotation = odom_quat;
-      
-      lidar_trans.header.stamp= current_time;
-
-      //send the transform
-      odom_broadcaster.sendTransform(odom_trans);
-      lidar_broadcaster.sendTransform(lidar_trans);
-
-      //next, we'll publish the odometry message over ROS
-      nav_msgs::Odometry odom;
-      odom.header.stamp = current_time;
-      odom.header.frame_id = "odom";
-
-      //set the position
-      odom.pose.pose.position.x = odo->getX()/1000.0;
-      odom.pose.pose.position.y = odo->getY()/1000.0;
-      odom.pose.pose.position.z = 0.0;
-      odom.pose.pose.orientation = odom_quat;
-
-      //set the velocity
-      odom.child_frame_id = "base_link";
-      odom.twist.twist.linear.x = odo->getVXEnco()/1000.0;
-      odom.twist.twist.linear.y = odo->getVYEnco()/1000.0;
-      odom.twist.twist.angular.z = odo->getVThetaEnco();
-
-      imu_ros.angular_velocity.z = (PI*((float)gyroscope[2]))/(180.0*1000.0)    - offset_imu_vel_Z;
-      imu_ros.linear_acceleration.x = (gravity)*((float)accelerometer[0])/(1000.0) - offset_imu_acc_X;
-      imu_ros.linear_acceleration.y = (gravity)*((float)accelerometer[1])/(1000.0) - offset_imu_acc_Y;
-      imu_ros.header.stamp = current_time;
-      imu_ros.header.frame_id = "base_link";
-      
-
-      pub.publish(&odom);
-      pub_imu.publish(&imu_ros);
-      odom_broadcaster.sendTransform(odom_trans);
-      lidar_broadcaster.sendTransform(lidar_trans);
-      
-    }
-
-  }
+  
   if(millis() > timerstart + 15000 && updateparam < 16)
   {
 
