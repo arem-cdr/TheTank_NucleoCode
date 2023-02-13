@@ -310,20 +310,19 @@ void parameter_cb(const std_msgs::Int8 & update_msg)
       
     }
   }
-
-  else if( update_msg.data == 16)  
-  {
+  // else if( update_msg.data == 16)  
+  // {
    
-    if(!nh.getParam("robot_dynamic_param/rate_ms",&rate_ms,1))
-    {
+  //   if(!nh.getParam("robot_dynamic_param/rate_ms",&rate_ms,1))
+  //   {
       
       
-      nh.loginfo("Failed to get param 16 \n");
+  //     nh.loginfo("Failed to get param 16 \n");
       
-    }
-    odo->set_min_update_period_us(1000*rate_ms);
-    control->set_rate(rate_ms);
-  }
+  //   }
+  //   odo->set_min_update_period_us(1000*rate_ms);
+  //   control->set_rate(rate_ms);
+  // }
   else
   {
     nh.loginfo("invalid param\n");
