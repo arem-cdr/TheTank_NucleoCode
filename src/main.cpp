@@ -33,6 +33,9 @@ float offset_imu_vel_Z = -0.003;
 
 float gravity = 9.80417;
 
+uint32_t timerstart;
+int updateparam = 0;
+
 bool reset_odo = false;
 bool last_reset_odo = false;
 bool tuning_mode = false;
@@ -105,42 +108,96 @@ void speed_cb( const geometry_msgs::Twist& cmd_msg){
 
 void parameter_cb(const std_msgs::Int8 & update_msg)
 {
+  int i = 0;
   if( update_msg.data == 0)
   {
    
-    nh.getParam("/robot_dynamic_param/wheelRadius_mm",&global_RayonRoues);
+    while(!nh.getParam("/robot_dynamic_param/wheelRadius_mm",&global_RayonRoues))
+    {
+      if(i++ == 5)
+      {
+        nh.loginfo("Failed to get param \n");
+        break;
+      }
+    }
     odo->setRayonRoues(global_RayonRoues);
   }
   else if( update_msg.data == 1)
   {
    
-    nh.getParam("/robot_dynamic_param/L1pL2_mm",&global_L1pL2);
+    while(!nh.getParam("/robot_dynamic_param/L1pL2_mm",&global_L1pL2))
+    {
+      if(i++ == 5)
+      {
+        nh.loginfo("Failed to get param \n");
+        break;
+      }
+    }
     odo->setL1pL2(global_L1pL2);
   }
   else if( update_msg.data == 2)
   {
    
-    nh.getParam("/robot_dynamic_param/offset_imu_acc_X", &offset_imu_acc_X);
+    while(!nh.getParam("/robot_dynamic_param/offset_imu_acc_X", &offset_imu_acc_X))
+    {
+      if(i++ == 5)
+      {
+        nh.loginfo("Failed to get param \n");
+        break;
+      }
+    } 
   }
+
   else if( update_msg.data == 3)
   {
    
-    nh.getParam("/robot_dynamic_param/offset_imu_acc_Y",&offset_imu_acc_Y);
+    while(!nh.getParam("/robot_dynamic_param/offset_imu_acc_Y",&offset_imu_acc_Y))
+    {
+      if(i++ == 5)
+      {
+        nh.loginfo("Failed to get param \n");
+        break;
+      }
+    }
   }
+
   else if( update_msg.data == 4)
   {
    
-    nh.getParam("/robot_dynamic_param/offset_imu_vel_Z",&offset_imu_vel_Z);
+    while(!nh.getParam("/robot_dynamic_param/offset_imu_vel_Z",&offset_imu_vel_Z))
+    {
+      if(i++ == 5)
+      {
+        nh.loginfo("Failed to get param \n");
+        break;
+      }
+    }
   }
+
   else if( update_msg.data == 5)
   {
    
-    nh.getParam("/robot_dynamic_param/gravity_constant",&gravity);
+    while(!nh.getParam("/robot_dynamic_param/gravity_constant",&gravity))
+    {
+      if(i++ == 5)
+      {
+        nh.loginfo("Failed to get param \n");
+        break;
+      }
+    }
   }
+
   else if( update_msg.data == 6)
   {
    
-    nh.getParam("/robot_dynamic_param/reset_odo",&reset_odo);
+    while(!nh.getParam("/robot_dynamic_param/reset_odo",&reset_odo))
+    {
+      if(i++ == 5)
+      {
+        nh.loginfo("Failed to get param \n");
+        break;
+      }
+    }
     odo->setX(INIT_X);
     odo->setY(INIT_Y);
     odo->setTheta(INIT_THETA);
@@ -149,7 +206,14 @@ void parameter_cb(const std_msgs::Int8 & update_msg)
   else if( update_msg.data == 7)
   {
    
-    nh.getParam("/robot_dynamic_param/tuning_mode",&tuning_mode);
+    while(!nh.getParam("/robot_dynamic_param/tuning_mode",&tuning_mode))
+    {
+      if(i++ == 5)
+      {
+        nh.loginfo("Failed to get param \n");
+        break;
+      }
+    }
     if(tuning_mode == true)
     {
       control->set_calib(ku_m1_fd,ku_m2_fg,ku_m3_bd,ku_m4_bg);
@@ -162,47 +226,118 @@ void parameter_cb(const std_msgs::Int8 & update_msg)
   else if( update_msg.data == 8)
   {
    
-    nh.getParam("robot_dynamic_param/Ku_m1_fd",&ku_m1_fd);
+    while(!nh.getParam("robot_dynamic_param/Ku_m1_fd",&ku_m1_fd))
+    {
+      if(i++ == 5)
+      {
+        nh.loginfo("Failed to get param \n");
+        break;
+      }
+    }
   }
+
   else if( update_msg.data == 9)
   {
    
-    nh.getParam("robot_dynamic_param/Ku_m2_fg",&ku_m2_fg);
+    while(!nh.getParam("robot_dynamic_param/Ku_m2_fg",&ku_m2_fg))
+    {
+      if(i++ == 5)
+      {
+        nh.loginfo("Failed to get param \n");
+        break;
+      }
+    }
   }
+
   else if( update_msg.data == 10)
   {
    
-    nh.getParam("robot_dynamic_param/Ku_m3_bd",&ku_m3_bd);
+    while(!nh.getParam("robot_dynamic_param/Ku_m3_bd",&ku_m3_bd))
+    {
+      if(i++ == 5)
+      {
+        nh.loginfo("Failed to get param \n");
+        break;
+      }
+    }
   }
+
   else if( update_msg.data == 11)  
   {
    
-    nh.getParam("robot_dynamic_param/Ku_m4_bg",&ku_m4_bg);
+    while(!nh.getParam("robot_dynamic_param/Ku_m4_bg",&ku_m4_bg))
+    {
+      if(i++ == 5)
+      {
+        nh.loginfo("Failed to get param \n");
+        break;
+      }
+    } 
   }
+
   else if( update_msg.data == 12)  
   {
    
-    nh.getParam("robot_dynamic_param/m1_enable",&m1_enable);
+    while(!nh.getParam("robot_dynamic_param/m1_enable",&m1_enable))
+    {
+      if(i++ == 5)
+      {
+        nh.loginfo("Failed to get param \n");
+        break;
+      }
+    } 
   }
+
   else if( update_msg.data == 13)  
   {
    
-    nh.getParam("robot_dynamic_param/m2_enable",&m2_enable);
+    while(!nh.getParam("robot_dynamic_param/m2_enable",&m2_enable))
+    {
+      if(i++ == 5)
+      {
+        nh.loginfo("Failed to get param \n");
+        break;
+      }
+    }
   }
+
   else if( update_msg.data == 14)  
   {
    
-    nh.getParam("robot_dynamic_param/m3_enable",&m3_enable);
+    while(!nh.getParam("robot_dynamic_param/m3_enable",&m3_enable))
+    {
+      if(i++ == 5)
+      {
+        nh.loginfo("Failed to get param \n");
+        break;
+      }
+    }
   }
+
   else if( update_msg.data == 15)  
   {
    
-    nh.getParam("robot_dynamic_param/m4_enable",&m4_enable);
+    while(!nh.getParam("robot_dynamic_param/m4_enable",&m4_enable))
+    {
+      if(i++ == 5)
+      {
+        nh.loginfo("Failed to get param \n");
+        break;
+      }
+    }
   }
+
   else if( update_msg.data == 16)  
   {
    
-    nh.getParam("robot_dynamic_param/rate_ms",&rate_ms);
+    while(!nh.getParam("robot_dynamic_param/rate_ms",&rate_ms))
+    {
+      if(i++ == 5)
+      {
+        nh.loginfo("Failed to get param \n");
+        break;
+      }
+    }
     odo->set_min_update_period_us(1000*rate_ms);
     control->set_rate(rate_ms);
  }
@@ -244,6 +379,7 @@ void setup() {
   readings.data_length=4;
   wheelSetpoints.data = tab_wheelSetpoints;
   readings.data = tab_readings;
+  timerstart = millis();
   
   
 
@@ -447,6 +583,15 @@ void loop() {
       lidar_broadcaster.sendTransform(lidar_trans);
       
     }
+
+  }
+  if(millis() > timer + 15000 && updateparam < 17)
+  {
+    std_msgs::Int8 tosend;
+    tosend.data = updateparam;
+    parameter_cb(tosend);
+    updateparam++;
+
 
   }
   nh.spinOnce();
