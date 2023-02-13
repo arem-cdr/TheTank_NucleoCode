@@ -2,7 +2,11 @@
 .vscode/c_cpp_properties.json
 .vscode/launch.json
 .vscode/ipch
-.pio/build/
-.pio/build/nucleo_f446re/
+.pio/build
+.pio/build/nucleo_f446re
 .pio/libdeps/integrity.dat
 .pio/libdeps/nucleo_f446re/integrity.dat
+.pio/build/nucleo_f446re/.sconsign38.dblite
+.pio/build/nucleo_f446re/firmware.bin
+.pio/build/nucleo_f446re/firmware.elf
+.pio/build/nucleo_f446re/src/main.cpp.o
