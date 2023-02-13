@@ -33,8 +33,8 @@ float offset_imu_vel_Z = -0.003;
 
 float gravity = 9.80417;
 
-uint32_t timerstart;
-int8_t updateparam = 0;
+uint32_t timerstart=0;
+int8_t supdateparam = 0;
 
 bool reset_odo = false;
 bool last_reset_odo = false;
@@ -566,14 +566,14 @@ void loop() {
     }
 
   }
-  if(millis() > timer + 15000 && updateparam < 17)
+  if(millis() > timerstart + 15000 && updateparam < 17)
   {
 
     
     std_msgs::Int8 tosend;
     tosend.data = updateparam;
     parameter_cb(tosend);
-    updateparam++;
+    updateparam+=1;
   
 
 
