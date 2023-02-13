@@ -314,7 +314,7 @@ void parameter_cb(const std_msgs::Int8 & update_msg)
   else if( update_msg.data == 16)  
   {
    
-    if(!nh.getParam("robot_dynamic_param/rate_ms",&rate_ms))
+    if(!nh.getParam("robot_dynamic_param/rate_ms",&rate_ms,1))
     {
       
       
@@ -323,7 +323,11 @@ void parameter_cb(const std_msgs::Int8 & update_msg)
     }
     odo->set_min_update_period_us(1000*rate_ms);
     control->set_rate(rate_ms);
- }
+  }
+  else
+  {
+    nh.loginfo("invalid param\n");
+  }
 
 
   
@@ -565,10 +569,11 @@ void loop() {
   if(millis() > timer + 15000 && updateparam < 17)
   {
 
-    updateparam++;
+    
     std_msgs::Int8 tosend;
     tosend.data = updateparam;
     parameter_cb(tosend);
+    updateparam++;
   
 
 
