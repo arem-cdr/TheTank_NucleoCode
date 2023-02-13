@@ -10,3 +10,39 @@
 .pio/build/nucleo_f446re/firmware.bin
 .pio/build/nucleo_f446re/firmware.elf
 .pio/build/nucleo_f446re/src/main.cpp.o
+.pio/build/project.checksum
+.pio/build/nucleo_f446re/.sconsign38.dblite
+.pio/build/nucleo_f446re/firmware.bin
+.pio/build/nucleo_f446re/firmware.elf
+.pio/build/nucleo_f446re/idedata.json
+.pio/build/nucleo_f446re/libFrameworkArduino.a
+.pio/build/nucleo_f446re/FrameworkArduino/HardwareSerial.cpp.o
+.pio/build/nucleo_f446re/FrameworkArduino/HardwareTimer.cpp.o
+.pio/build/nucleo_f446re/FrameworkArduino/wiring_analog.c.o
+.pio/build/nucleo_f446re/FrameworkArduino/wiring_digital.c.o
+.pio/build/nucleo_f446re/FrameworkArduinoVariant/variant_NUCLEO_F446RE.cpp.o
+.pio/build/nucleo_f446re/lib219/libSpeedPIDController.a
+.pio/build/nucleo_f446re/lib219/SpeedPIDController/SpeedPIDController.cpp.o
+.pio/build/nucleo_f446re/lib46b/libEtatDynamiqueRobot.a
+.pio/build/nucleo_f446re/lib46b/EtatDynamiqueRobot/EtatDynamiqueRobot.cpp.o
+.pio/build/nucleo_f446re/lib54a/libRosserial Arduino Library.a
+.pio/build/nucleo_f446re/lib54a/Rosserial Arduino Library/duration.cpp.o
+.pio/build/nucleo_f446re/lib54a/Rosserial Arduino Library/time.cpp.o
+.pio/build/nucleo_f446re/lib674/libBlocMoteurs.a
+.pio/build/nucleo_f446re/lib674/BlocMoteurs/BlocMoteurs.cpp.o
+.pio/build/nucleo_f446re/lib8dc/libOdometrie.a
+.pio/build/nucleo_f446re/lib8dc/Odometrie/Odometrie.cpp.o
+.pio/build/nucleo_f446re/libb21/libWire.a
+.pio/build/nucleo_f446re/libb21/Wire/Wire.cpp.o
+.pio/build/nucleo_f446re/libb21/Wire/utility/twi.c.o
+.pio/build/nucleo_f446re/libe6e/libSPI.a
+.pio/build/nucleo_f446re/libe6e/SPI/SPI.cpp.o
+.pio/build/nucleo_f446re/libe6e/SPI/utility/spi_com.c.o
+.pio/build/nucleo_f446re/libf50/libEncoder4Mot.a
+.pio/build/nucleo_f446re/libf50/Encoder4Mot/Encoder4Mot.cpp.o
+.pio/build/nucleo_f446re/libff8/libSTM32duino ISM330DHCX.a
+.pio/build/nucleo_f446re/libff8/STM32duino ISM330DHCX/ism330dhcx_reg.c.o
+.pio/build/nucleo_f446re/libff8/STM32duino ISM330DHCX/ISM330DHCXSensor.cpp.o
+.pio/build/nucleo_f446re/src/main.cpp.o
+.pio/build/nucleo_f446re/SrcWrapper/src/stm32/clock.c.o
+.pio/build/nucleo_f446re/SrcWrapper/src/stm32/pinmap.c.o
