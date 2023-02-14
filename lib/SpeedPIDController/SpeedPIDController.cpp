@@ -108,7 +108,7 @@ bool SpeedPIDController::update_controller(bool updateEnco, bool waitLoop)
         ed = (setpoint_speed - readings) - e;
         e = setpoint_speed - readings;
         ei+=delta*e;
-        std::valarray<double> u = Kp*e + Kd*ed + Ki*ei;
+        std::valarray<double> u = Kp*e - Kd*ed + Ki*ei;
        
         motors->commande_vitesses(u[0],u[1],u[2],u[3]);
         lastCall_date_ms = millis();
