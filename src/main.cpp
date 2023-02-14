@@ -231,25 +231,22 @@ void parameter_cb(const std_msgs::Int8 & update_msg)
     }
 
   }
-  // else if( update_msg.data == 7)
-  // {
+  else if( update_msg.data == 7)
+  {
    
-  //   if(!nh.getParam("/robot_dynamic_param/tuning_mode",&tuning_mode))
-  //   {
+    if(!nh.getParam("/robot_dynamic_param/tuning_mode",&tuning_mode))
+    {
       
       
-  //     nh.loginfo("Failed to get param 7 \n");
+      nh.loginfo("Failed to get param 7 \n");
       
-  //   }
-  //   if(tuning_mode == true)
-  //   {
-  //     control->set_calib(ku_m1_fd,ku_m2_fg,ku_m3_bd,ku_m4_bg);
-  //   }
-  //   else
-  //   {
-  //     control->unset_calib(ku_m1_fd,ku_m2_fg,ku_m3_bd,ku_m4_bg);
-  //   }
-  // }
+    }
+    if(tuning_mode == true)
+    {
+      NVIC_SystemReset();
+    }
+
+  }
   else if( update_msg.data == 8)
   {
    
@@ -263,7 +260,7 @@ void parameter_cb(const std_msgs::Int8 & update_msg)
     else
     {
       nh.loginfo("got param 8 \n");
-      control->set_calib(ku_m1_fd,ku_m2_fg,ku_m3_bd,ku_m4_bg);
+      control->unset_calib(ku_m1_fd,ku_m2_fg,ku_m3_bd,ku_m4_bg);
     }
   }
 
@@ -280,7 +277,7 @@ void parameter_cb(const std_msgs::Int8 & update_msg)
     else
     {
       nh.loginfo("got param 9 \n");
-      control->set_calib(ku_m1_fd,ku_m2_fg,ku_m3_bd,ku_m4_bg);
+      control->unset_calib(ku_m1_fd,ku_m2_fg,ku_m3_bd,ku_m4_bg);
     }
   }
 
@@ -297,7 +294,7 @@ void parameter_cb(const std_msgs::Int8 & update_msg)
     else
     {
       nh.loginfo("got param 10 \n");
-      control->set_calib(ku_m1_fd,ku_m2_fg,ku_m3_bd,ku_m4_bg);
+      control->unset_calib(ku_m1_fd,ku_m2_fg,ku_m3_bd,ku_m4_bg);
     }
   }
 
@@ -314,7 +311,7 @@ void parameter_cb(const std_msgs::Int8 & update_msg)
     else
     {
       nh.loginfo("got param 11 \n");
-      control->set_calib(ku_m1_fd,ku_m2_fg,ku_m3_bd,ku_m4_bg);
+      control->unset_calib(ku_m1_fd,ku_m2_fg,ku_m3_bd,ku_m4_bg);
     }
   }
 
