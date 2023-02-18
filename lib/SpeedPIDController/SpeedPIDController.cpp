@@ -82,9 +82,9 @@ e(4,0),  ei(4,0), ed(4,0), rate_ms(input_rate_ms), lastCall_date_ms(millis()), K
 void SpeedPIDController::define_setpoint(double w_M1_FD, double w_M2_FG, double w_M3_BD, double w_M4_BG)
 {
     setpoint_speed = { w_M1_FD, w_M2_FG, w_M3_BD, w_M4_BG};
-    e = {0.0,0.0,0.0,0.0};
-    ei = {0.0,0.0,0.0,0.0};
-    ed = {0.0,0.0,0.0,0.0};
+    // e = {0.0,0.0,0.0,0.0};
+    // ei = {0.0,0.0,0.0,0.0};
+    // ed = {0.0,0.0,0.0,0.0};
     motors->motors_on();
     
 };
@@ -108,7 +108,7 @@ bool SpeedPIDController::update_controller(bool updateEnco, bool waitLoop)
         ed = (setpoint_speed - readings) - e;
         e = setpoint_speed - readings;
         ei+=delta*e;
-        std::valarray<double> u = Kp*e - Kd*ed + Ki*ei;
+        std::valarray<double> u = Kp*e + Kd*ed + Ki*ei;
        
         motors->commande_vitesses(u[0],u[1],u[2],u[3]);
         lastCall_date_ms = millis();
