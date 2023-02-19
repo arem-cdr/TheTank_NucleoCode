@@ -236,7 +236,7 @@ void setup() {
   nh.subscribe(sub_reset_odo);
   
   nh.advertise(pub);
-  // nh.advertise(pub_imu);
+  nh.advertise(pub_imu);
   
   // nh.advertise(pub_setpoint_wheel_speeds);
   // nh.advertise(pub_wheel_speeds);
