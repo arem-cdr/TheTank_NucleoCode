@@ -127,15 +127,19 @@ void Ku_callback(const std_msgs::Float32MultiArray & robot_geometry)
   ku_m3_bd = robot_geometry.data[2];
   ku_m4_bg = robot_geometry.data[3];
 
+  char tobeprinted[50];
+  sprintf(tobeprinted,"New Ku : %f %f %f %f\n",ku_m1_fd,ku_m2_fg,ku_m3_bd,ku_m4_bg);
+  nh.loginfo(tobeprinted);
   if(tuning_mode == false)
   {
 
-  
+    nh.loginfo("tuning_mode off\n");
     control->unset_calib(ku_m1_fd,ku_m2_fg,ku_m3_bd,ku_m4_bg);
 
   }
   else
   {
+    nh.loginfo("tuning_mode on\n");
     control->set_calib(ku_m1_fd,ku_m2_fg,ku_m3_bd,ku_m4_bg);
 
   }
@@ -145,7 +149,10 @@ void Ku_callback(const std_msgs::Float32MultiArray & robot_geometry)
 void tuning_mode_callback(const std_msgs::Bool & tuning_mode_msg)
 {
   tuning_mode = tuning_mode_msg.data;
-  control->set_calib(ku_m1_fd,ku_m2_fg,ku_m3_bd,ku_m4_bg);
+  if(tuning_mode == true)
+  {
+    control->set_calib(ku_m1_fd,ku_m2_fg,ku_m3_bd,ku_m4_bg);
+  }
   
 }
 
@@ -164,7 +171,7 @@ ros::Subscriber<std_msgs::Float32MultiArray> sub_Ku("Ku",Ku_callback);
 ros::Subscriber<std_msgs::Bool> sub_tuning_mode("tuning_mode",tuning_mode_callback);
 ros::Subscriber<std_msgs::Bool> sub_reset_odo("reset_odo",reset_odo_callback);
 ros::Publisher pub("nav_msgs/odo", &odo_ros);
-ros::Publisher pub_imu("sensor_msgs/Imu", &imu_ros);
+// ros::Publisher pub_imu("sensor_msgs/Imu", &imu_ros);
 ros::Publisher pub_setpoint_wheel_speeds("calib/setpoint_wheels", &wheelSetpoints);
 ros::Publisher pub_wheel_speeds("calib/wheel_speeds", &readings);
 tf::TransformBroadcaster odom_broadcaster;
@@ -190,14 +197,14 @@ void setup() {
   
 
 
-  Wire.begin();
-  Wire.setClock(400000);
+  // Wire.begin();
+  // Wire.setClock(400000);
 
 
-  AccGyr.begin();
-  AccGyr.ACC_Enable();  
-  AccGyr.GYRO_Enable();
-  AccGyr.ACC_SetFullScale(ISM330DHCX_16g);
+  // AccGyr.begin();
+  // AccGyr.ACC_Enable();  
+  // AccGyr.GYRO_Enable();
+  // AccGyr.ACC_SetFullScale(ISM330DHCX_16g);
  
 
   odom_broadcaster.init(nh);
@@ -229,7 +236,7 @@ void setup() {
   nh.subscribe(sub_reset_odo);
   
   nh.advertise(pub);
-  nh.advertise(pub_imu);
+  // nh.advertise(pub_imu);
   
   nh.advertise(pub_setpoint_wheel_speeds);
   nh.advertise(pub_wheel_speeds);
@@ -243,7 +250,7 @@ void setup() {
   lidar_trans.transform.rotation = lidar_quat;
 
   
-  
+  control->unset_calib(ku_m1_fd,ku_m2_fg,ku_m3_bd,ku_m4_bg);
  
 
 
@@ -258,11 +265,11 @@ void loop() {
   if(odo->update())
   {
     control->update_controller(false,false);
-    int32_t accelerometer[3];
-    int32_t gyroscope[3];
+    // int32_t accelerometer[3];
+    // int32_t gyroscope[3];
     
-    AccGyr.ACC_GetAxes(accelerometer);  
-    AccGyr.GYRO_GetAxes(gyroscope);
+    // AccGyr.ACC_GetAxes(accelerometer);  
+    // AccGyr.GYRO_GetAxes(gyroscope);
     ros::Time current_time = nh.now();
 
 
@@ -302,16 +309,16 @@ void loop() {
     odom.twist.twist.linear.y = odo->getVYEnco()/1000.0;
     odom.twist.twist.angular.z = odo->getVThetaEnco();
 
-    imu_ros.angular_velocity.z = (PI*((float)gyroscope[2]))/(180.0*1000.0)    - offset_imu_vel_Z;
-    imu_ros.linear_acceleration.x = (gravity)*((float)accelerometer[0])/(1000.0) - offset_imu_acc_X;
-    imu_ros.linear_acceleration.y = (gravity)*((float)accelerometer[1])/(1000.0) - offset_imu_acc_Y;
-    imu_ros.header.stamp = current_time;
-    imu_ros.header.frame_id = "base_link";
+    // imu_ros.angular_velocity.z = (PI*((float)gyroscope[2]))/(180.0*1000.0)    - offset_imu_vel_Z;
+    // imu_ros.linear_acceleration.x = (gravity)*((float)accelerometer[0])/(1000.0) - offset_imu_acc_X;
+    // imu_ros.linear_acceleration.y = (gravity)*((float)accelerometer[1])/(1000.0) - offset_imu_acc_Y;
+    // imu_ros.header.stamp = current_time;
+    // imu_ros.header.frame_id = "base_link";
     
 
 
     pub.publish(&odom);
-    pub_imu.publish(&imu_ros);
+    // pub_imu.publish(&imu_ros);
     pub_setpoint_wheel_speeds.publish(&wheelSetpoints);
     std::vector<double> toprint = encoder->GetSpeeds();
     readings.data[0] = toprint[0];
