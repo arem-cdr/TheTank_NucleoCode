@@ -52,10 +52,10 @@ SpeedPIDController* control;
 uint32_t timerBlink;
 
 
-float ku_m1_fd=0.08;
-float ku_m2_fg=0.08;
-float ku_m3_bd=0.08;
-float ku_m4_bg=0.08;
+// float ku_m1_fd=0.08;
+// float ku_m2_fg=0.08;
+// float ku_m3_bd=0.08;
+// float ku_m4_bg=0.08;
 
 int rate_ms = 30;
 
@@ -172,8 +172,8 @@ ros::Subscriber<std_msgs::Float32MultiArray> sub_robot_geometry("robot_geometry"
 ros::Subscriber<std_msgs::Bool> sub_reset_odo("reset_odo",reset_odo_callback);
 ros::Publisher pub("nav_msgs/odo", &odo_ros);
 ros::Publisher pub_imu("sensor_msgs/Imu", &imu_ros);
-// ros::Publisher pub_setpoint_wheel_speeds("calib/setpoint_wheels", &wheelSetpoints);
-// ros::Publisher pub_wheel_speeds("calib/wheel_speeds", &readings);
+ros::Publisher pub_setpoint_wheel_speeds("calib/setpoint_wheels", &wheelSetpoints);
+ros::Publisher pub_wheel_speeds("calib/wheel_speeds", &readings);
 tf::TransformBroadcaster odom_broadcaster;
 tf::TransformBroadcaster lidar_broadcaster;
 geometry_msgs::TransformStamped lidar_trans;
@@ -238,8 +238,8 @@ void setup() {
   nh.advertise(pub);
   nh.advertise(pub_imu);
   
-  // nh.advertise(pub_setpoint_wheel_speeds);
-  // nh.advertise(pub_wheel_speeds);
+  nh.advertise(pub_setpoint_wheel_speeds);
+  nh.advertise(pub_wheel_speeds);
   timer = millis();
   
   
@@ -249,8 +249,6 @@ void setup() {
   lidar_trans.child_frame_id = "laser";
   lidar_trans.transform.rotation = lidar_quat;
 
-  
-  control->unset_calib(ku_m1_fd,ku_m2_fg,ku_m3_bd,ku_m4_bg);
  
 
 
@@ -319,13 +317,13 @@ void loop() {
 
     pub.publish(&odom);
     pub_imu.publish(&imu_ros);
-    // pub_setpoint_wheel_speeds.publish(&wheelSetpoints);
-    // std::vector<double> toprint = encoder->GetSpeeds();
-    // readings.data[0] = toprint[0];
-    // readings.data[1] = toprint[1];
-    // readings.data[2] = toprint[2];
-    // readings.data[3] = toprint[3];
-    // pub_wheel_speeds.publish(&readings);
+    pub_setpoint_wheel_speeds.publish(&wheelSetpoints);
+    std::vector<double> toprint = encoder->GetSpeeds();
+    readings.data[0] = toprint[0];
+    readings.data[1] = toprint[1];
+    readings.data[2] = toprint[2];
+    readings.data[3] = toprint[3];
+    pub_wheel_speeds.publish(&readings);
     
 
   }
