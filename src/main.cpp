@@ -52,10 +52,10 @@ SpeedPIDController* control;
 uint32_t timerBlink;
 
 
-float ku_m1_fd=0.12;
-float ku_m2_fg=0.12;
-float ku_m3_bd=0.12;
-float ku_m4_bg=0.12;
+float ku_m1_fd=0.08;
+float ku_m2_fg=0.08;
+float ku_m3_bd=0.08;
+float ku_m4_bg=0.08;
 
 int rate_ms = 30;
 
