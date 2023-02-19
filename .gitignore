@@ -281,3 +281,5 @@
 .pio/build/nucleo_f446re/SrcWrapper/src/stm32/system_stm32yyxx.c.o
 .pio/build/nucleo_f446re/SrcWrapper/src/stm32/timer.c.o
 .pio/build/nucleo_f446re/SrcWrapper/src/stm32/uart.c.o
+.pio/build/project.checksum
+.pio/build/nucleo_f446re/idedata.json
