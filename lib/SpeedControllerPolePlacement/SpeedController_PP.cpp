@@ -19,7 +19,7 @@ lastCall_date_ms(millis()),setpoint_speed(4,0),
 motors_input(4,0),motors_input_last(4,0),motors_input_last_last(4,0),
 e(4,0),e_last(4,0),e_last_last(4,0)
 {
-    
+    rate_ms = RATE_MS;
     delta = ((double)rate_ms)/1000.0;
     K = {0.086262837,0.100777876,0.102160288,0.098122332};
     motors = new BlocMoteurs();
@@ -37,6 +37,7 @@ lastCall_date_ms(millis()),setpoint_speed(4,0),
 motors_input(4,0),motors_input_last(4,0),motors_input_last_last(4,0),
 e(4,0),e_last(4,0),e_last_last(4,0)
 {
+    rate_ms = RATE_MS;
     delta = ((double)rate_ms)/1000.0;
     K = {0.086262837,0.100777876,0.102160288,0.098122332};
 
