@@ -139,30 +139,72 @@ void setup() {
   {
     if(control->update_controller())
     {
-      std::valarray<double> toprint = control->getmotors_input();
-      std::vector<double> toadd {toprint[0],toprint[1],toprint[2],toprint[3]};
-      toprint_vector.push_back(toadd);
-      toprint_vector_2.push_back(encoder->GetSpeeds());
+      // std::valarray<double> toprint = control->getmotors_input();
+      // std::vector<double> toadd {toprint[0],toprint[1],toprint[2],toprint[3]};
+      // toprint_vector.push_back(toadd);
+      // toprint_vector_2.push_back(encoder->GetSpeeds());
+
+    }
+
+  }
+  control->define_setpoint(10.0,10.0,10.0,10.0);
+  timer = millis();
+  while(millis() < timer + 5000)
+  {
+    if(control->update_controller())
+    {
+      // std::valarray<double> toprint = control->getmotors_input();
+      // std::vector<double> toadd {toprint[0],toprint[1],toprint[2],toprint[3]};
+      // toprint_vector.push_back(toadd);
+      // toprint_vector_2.push_back(encoder->GetSpeeds());
+
+    }
+
+  }
+  control->define_setpoint(1.0,1.0,1.0,1.0);
+  timer = millis();
+  while(millis() < timer + 5000)
+  {
+    if(control->update_controller())
+    {
+      // std::valarray<double> toprint = control->getmotors_input();
+      // std::vector<double> toadd {toprint[0],toprint[1],toprint[2],toprint[3]};
+      // toprint_vector.push_back(toadd);
+      // toprint_vector_2.push_back(encoder->GetSpeeds());
 
     }
 
   }
   mot->motors_stop();
-  for(int i = 0; i<toprint_vector.size();i++)
+  timer = millis();
+  while(millis() < timer + 5000)
   {
-    for(int k = 0; k<4; k++)
+    if(control->update_controller())
     {
-      Serial.print(toprint_vector[i][k]);
-      Serial.print(";");
+      // std::valarray<double> toprint = control->getmotors_input();
+      // std::vector<double> toadd {toprint[0],toprint[1],toprint[2],toprint[3]};
+      // toprint_vector.push_back(toadd);
+      // toprint_vector_2.push_back(encoder->GetSpeeds());
+
     }
-    for(int k = 0; k<4; k++)
-    {
-      Serial.print(toprint_vector_2[i][k]);
-      Serial.print(";");
-    }
-    Serial.println(i);
-    
+
   }
+  mot->motors_stop();
+  // for(int i = 0; i<toprint_vector.size();i++)
+  // {
+  //   for(int k = 0; k<4; k++)
+  //   {
+  //     Serial.print(toprint_vector[i][k]);
+  //     Serial.print(";");
+  //   }
+  //   for(int k = 0; k<4; k++)
+  //   {
+  //     Serial.print(toprint_vector_2[i][k]);
+  //     Serial.print(";");
+  //   }
+  //   Serial.println(i);
+    
+  // }
 
 
 }
