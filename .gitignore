@@ -3,3 +3,5 @@
 .vscode/launch.json
 .vscode/ipch
 .pio/
+.pio/build/project.checksum
+.pio/build/nucleo_f446re/idedata.json
