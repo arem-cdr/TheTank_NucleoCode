@@ -22,7 +22,7 @@ e(4,0),e_last(4,0),e_last_last(4,0)
     rate_ms = RATE_MS;
     delta = ((double)rate_ms)/1000.0;
     //K = {0.086262837,0.100777876,0.102160288,0.098122332};
-    K = {0.057508558,0.06718525,0.068106859,0.065414888};
+    K = {0.057508558/2.0,0.06718525/2.0,0.068106859/2.0,0.065414888/2.0};
 
     motors_input = {0.0,0.0,0.0,0.0};
     motors_input_last = {0.0,0.0,0.0,0.0};
@@ -48,7 +48,7 @@ e(4,0),e_last(4,0),e_last_last(4,0)
     rate_ms = RATE_MS;
     delta = ((double)rate_ms)/1000.0;
     //K = {0.086262837,0.100777876,0.102160288,0.098122332};
-    K = {0.057508558,0.06718525,0.068106859,0.065414888};
+    K = {0.057508558/2.0,0.06718525/2.0,0.068106859/2.0,0.065414888/2.0};
     motors_input = {0.0,0.0,0.0,0.0};
     motors_input_last = {0.0,0.0,0.0,0.0};
     motors_input_last_last = {0.0,0.0,0.0,0.0};
@@ -114,7 +114,7 @@ bool SpeedController_PP::update_controller(bool updateEnco, bool waitLoop)
 
         motors_input_last_last = motors_input_last;
         motors_input_last = motors_input;    
-        motors_input = (1.1*motors_input_last)-(0.1*motors_input_last_last)+(K*e)-((0.9*K)*e_last);
+        motors_input = (1.1*motors_input_last)-(0.1*motors_input_last_last)+(K*e_last)-((0.9*K)*e_last_last);
         
         motors->commande_vitesses(motors_input[0],motors_input[1],motors_input[2],motors_input[3]);
         lastCall_date_ms = millis();
