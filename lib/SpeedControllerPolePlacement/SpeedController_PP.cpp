@@ -114,7 +114,7 @@ bool SpeedController_PP::update_controller(bool updateEnco, bool waitLoop)
 
         motors_input_last_last = motors_input_last;
         motors_input_last = motors_input;    
-        motors_input = (1.1*motors_input_last)-(0.1*motors_input_last_last)+(K*e_last)-((0.9*K)*e_last_last);
+        motors_input = (1.1*motors_input_last)-(0.1*motors_input_last_last)+(K*e)-((0.9*K)*e_last);
         
         motors->commande_vitesses(motors_input[0],motors_input[1],motors_input[2],motors_input[3]);
         lastCall_date_ms = millis();

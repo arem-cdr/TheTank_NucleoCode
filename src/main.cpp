@@ -7,7 +7,7 @@
 #include "Encoder4Mot.h"
 #include "Odometrie.h"
 #include <cstdio>
-#include <SpeedController_M.h>
+#include <SpeedController_PP.h>
 
 #include <global.h>
 
@@ -31,7 +31,7 @@ BlocMoteurs* mot;
 Odometrie* odo;
 uint32_t timer;
 int printVar;
-SpeedController_M* control;
+SpeedController_PP* control;
 
 
 int rate_ms = 30;
@@ -64,7 +64,7 @@ void setup() {
   mot = new BlocMoteurs();
   encoder =  new Encoder4Mot();
   odo = new Odometrie(1000*rate_ms,encoder);
-  control = new SpeedController_M(mot,encoder);
+  control = new SpeedController_PP(mot,encoder);
 
   delay(5000);
 
