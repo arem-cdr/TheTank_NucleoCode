@@ -14,6 +14,7 @@ class SpeedController_PP // Classe pour asservir la vitesse des moteurs Avec met
 {
     private:
         std::valarray<double> K; // Kp du correcteur PID 
+        std::valarray<double> z0;  
         std::valarray<double> motors_input;
         std::valarray<double> motors_input_last;
         std::valarray<double> motors_input_last_last;
@@ -27,6 +28,7 @@ class SpeedController_PP // Classe pour asservir la vitesse des moteurs Avec met
         uint32_t lastCall_date_ms; // date du dernier appel de update
         BlocMoteurs* motors; // moteurs
         Encoder4Mot* encoders; // encodeurs
+        double zr;
 
         
     public:
