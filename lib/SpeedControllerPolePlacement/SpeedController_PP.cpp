@@ -14,14 +14,19 @@ void printVallaray(std::valarray<double> array)
 
 }
 
-SpeedController_PP::SpeedController_PP() : K(4,0),
+SpeedController_PP::SpeedController_PP() : K(4,0),z0(4,0),
 lastCall_date_ms(millis()),setpoint_speed(4,0),
 motors_input(4,0),motors_input_last(4,0),motors_input_last_last(4,0),
 e(4,0),e_last(4,0),e_last_last(4,0)
 {
     rate_ms = RATE_MS;
     delta = ((double)rate_ms)/1000.0;
-    K = {0.086262837,0.100777876,0.102160288,0.098122332};
+    //K = {0.086262837,0.100777876,0.102160288,0.098122332};
+    K = {0.053828569/2.0,0.046058035/2.0,0.055070336/2.0,0.0458791/2.0};
+    z0 = {0.727259923,0.668161207,0.7290917,0.679194871};
+
+    zr = 0.5;
+
     motors_input = {0.0,0.0,0.0,0.0};
     motors_input_last = {0.0,0.0,0.0,0.0};
     motors_input_last_last = {0.0,0.0,0.0,0.0};
@@ -38,14 +43,20 @@ e(4,0),e_last(4,0),e_last_last(4,0)
 }
 
 
-SpeedController_PP::SpeedController_PP(BlocMoteurs* motors_ptr, Encoder4Mot* encoders_ptr) :K(4,0),
+SpeedController_PP::SpeedController_PP(BlocMoteurs* motors_ptr, Encoder4Mot* encoders_ptr) :K(4,0),z0(4,0),
 lastCall_date_ms(millis()),setpoint_speed(4,0),
 motors_input(4,0),motors_input_last(4,0),motors_input_last_last(4,0),
 e(4,0),e_last(4,0),e_last_last(4,0)
 {
     rate_ms = RATE_MS;
     delta = ((double)rate_ms)/1000.0;
-    K = {0.086262837,0.100777876,0.102160288,0.098122332};
+    //K = {0.086262837,0.100777876,0.102160288,0.098122332};
+     K = {0.053828569/2.0,0.046058035/2.0,0.055070336/2.0,0.0458791/2.0};
+    z0 = {0.727259923,0.668161207,0.7290917,0.679194871};
+
+    zr = 0.5;
+    
+
     motors_input = {0.0,0.0,0.0,0.0};
     motors_input_last = {0.0,0.0,0.0,0.0};
     motors_input_last_last = {0.0,0.0,0.0,0.0};
@@ -111,7 +122,7 @@ bool SpeedController_PP::update_controller(bool updateEnco, bool waitLoop)
 
         motors_input_last_last = motors_input_last;
         motors_input_last = motors_input;    
-        motors_input = (1.1*motors_input_last)-(0.1*motors_input_last_last)+(K*e)-((0.9*K)*e_last);
+        motors_input = ((1+zr)*motors_input_last)-(zr*motors_input_last_last)+(K*e_last)-((z0*K)*e_last_last);
         
         motors->commande_vitesses(motors_input[0],motors_input[1],motors_input[2],motors_input[3]);
         lastCall_date_ms = millis();
