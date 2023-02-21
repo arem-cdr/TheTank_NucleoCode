@@ -178,12 +178,10 @@ void setup() {
 
 
 
-	
-
-
   
 
   nh.subscribe(sub);
+
 
 
 
@@ -205,6 +203,7 @@ void setup() {
   lidar_trans.transform.rotation = lidar_quat;
 
  
+
 
 
 
