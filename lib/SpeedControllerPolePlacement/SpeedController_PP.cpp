@@ -30,6 +30,7 @@ e(4,0),e_last(4,0),e_last_last(4,0)
     motors_input = {0.0,0.0,0.0,0.0};
     motors_input_last = {0.0,0.0,0.0,0.0};
     motors_input_last_last = {0.0,0.0,0.0,0.0};
+    setpoint_speed = {0.0,0.0,0.0,0.0};
     e =  {0.0,0.0,0.0,0.0};
     e_last = {0.0,0.0,0.0,0.0};
     e_last_last = {0.0,0.0,0.0,0.0};
@@ -63,6 +64,7 @@ e(4,0),e_last(4,0),e_last_last(4,0)
     e =  {0.0,0.0,0.0,0.0};
     e_last = {0.0,0.0,0.0,0.0};
     e_last_last = {0.0,0.0,0.0,0.0};
+    setpoint_speed = {0.0,0.0,0.0,0.0};
 
     
     if(motors_ptr == NULL)
