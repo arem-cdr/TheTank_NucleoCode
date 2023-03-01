@@ -27,5 +27,7 @@
 #define L1 365 // A MESURER // en mm ; Largeur entre le centre du robot et le milieu d'une roue (milieu vers gauche par rapport à l'avant)
 #define L2 252 // A MESURER // en mm ; Longeur entre le centre du robot et le milieu d'une roue (milieu vers avant par rapport à l'avant)
 
+#define L1PL2 308.5
+
 extern float global_L1pL2;
 extern float global_RayonRoues; 

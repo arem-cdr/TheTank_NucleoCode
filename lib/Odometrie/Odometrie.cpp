@@ -15,7 +15,7 @@ Odometrie::Odometrie(uint32_t min_update_period_us, Encoder4Mot* myencodeurs) : 
 
     
     RayonRoues = RAYON_ROUE;
-    L1pL2 = L1 + L2;
+    L1pL2 = L1PL2;
 
     _last_update_etat = micros();
 
