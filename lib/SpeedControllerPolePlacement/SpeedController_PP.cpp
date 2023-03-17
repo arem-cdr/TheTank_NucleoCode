@@ -127,7 +127,7 @@ bool SpeedController_PP::update_controller(bool updateEnco, bool waitLoop)
         motors_input = ((1+zr)*motors_input_last)-(zr*motors_input_last_last)+(K*e_last)-((z0*K)*e_last_last);
         for(int i = 0; i<4; i++)
         {
-            motors_input[i] = std::min(fabs(motors_input[i]),1.0)*(motors_input[i] > 0.0 - motors_input[i] < 0.0);
+            motors_input[i] = std::min(fabs(motors_input[i]),1.0)*((motors_input[i] > 0.0) - (motors_input[i] < 0.0));
         }
         
         motors->commande_vitesses(motors_input[0],motors_input[1],motors_input[2],motors_input[3]);
