@@ -64,6 +64,16 @@ float tab_readings[4] {0.0,0.0,0.0,0.0};
 
 double Vx_setpoint = 0.0;
 double Vy_setpoint = 0.0;
+ 
+
+double Vx_setpoint_not_scaled = 0.0;
+double Vy_setpoint_not_scaled = 0.0;
+
+
+double Vx_setpoint_last = 0.0;
+double Vy_setpoint_last = 0.0;
+double Vtheta_setpoint_last = 0.0;
+
 double Vtheta_setpoint = 0.0;
 
 double w1,w2,w3,w4 = 0;
@@ -83,10 +93,23 @@ ros::NodeHandle  nh;
 
 void speed_cb( const geometry_msgs::Twist& cmd_msg){
 
+  Vx_setpoint_not_scaled = cmd_msg.linear.x;
+  Vy_setpoint_not_scaled = cmd_msg.linear.y;
+  
+
+
 
   Vx_setpoint = cmd_msg.linear.x*1000.0;
   Vy_setpoint = cmd_msg.linear.y*1000.0;
   Vtheta_setpoint = cmd_msg.angular.z;
+
+  if(fabs(Vx_setpoint_last-Vx_setpoint_not_scaled) > 0.2 || fabs(Vy_setpoint_last-Vy_setpoint_not_scaled) > 0.2 )
+  {
+    control->reset_controller_internal();
+  }
+
+
+
   odo->compute_robot_to_encoders(&Vx_setpoint,&Vy_setpoint,&Vtheta_setpoint,&w1,&w2,&w3,&w4);
   control->define_setpoint(w1,w2,w3,w4);
   wheelSetpoints.data[0] = w1;
@@ -99,7 +122,9 @@ void speed_cb( const geometry_msgs::Twist& cmd_msg){
     timerBlink = millis();
   }
 
-
+  Vx_setpoint_last = Vx_setpoint;
+  Vy_setpoint_last = Vy_setpoint;
+  Vtheta_setpoint_last = 0.0;
   
 }
 

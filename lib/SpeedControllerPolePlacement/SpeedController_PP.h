@@ -45,6 +45,15 @@ class SpeedController_PP // Classe pour asservir la vitesse des moteurs Avec met
             motors->motors_stop();
         };
         std::valarray<double> getmotors_input(){return motors_input;};
+        void reset_controller_internal()
+        { 
+            motors_input={0.0,0.0,0.0,0.0};
+            motors_input_last={0.0,0.0,0.0,0.0};
+            motors_input_last_last={0.0,0.0,0.0,0.0};
+            e={0.0,0.0,0.0,0.0};
+            e_last={0.0,0.0,0.0,0.0};
+            e_last_last={0.0,0.0,0.0,0.0};
+        };
 
 
         
