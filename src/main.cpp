@@ -103,10 +103,10 @@ void speed_cb( const geometry_msgs::Twist& cmd_msg){
   Vy_setpoint = cmd_msg.linear.y*1000.0;
   Vtheta_setpoint = cmd_msg.angular.z;
 
-  if(fabs(Vx_setpoint_last-Vx_setpoint_not_scaled) > 0.2 || fabs(Vy_setpoint_last-Vy_setpoint_not_scaled) > 0.2 )
-  {
-    control->reset_controller_internal();
-  }
+ // if(fabs(Vx_setpoint_last-Vx_setpoint_not_scaled) > 0.2 || fabs(Vy_setpoint_last-Vy_setpoint_not_scaled) > 0.2 )
+ // {
+ //   control->reset_controller_internal();
+ // }
 
 
 
@@ -122,8 +122,8 @@ void speed_cb( const geometry_msgs::Twist& cmd_msg){
     timerBlink = millis();
   }
 
-  Vx_setpoint_last = Vx_setpoint;
-  Vy_setpoint_last = Vy_setpoint;
+  Vx_setpoint_last = Vx_setpoint_not_scaled;
+  Vy_setpoint_last = Vy_setpoint_not_scaled;
   Vtheta_setpoint_last = 0.0;
   
 }
