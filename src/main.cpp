@@ -256,7 +256,7 @@ void loop() {
     geometry_msgs::TransformStamped odom_trans;
     odom_trans.header.stamp = current_time;
     odom_trans.header.frame_id = "odom";
-    odom_trans.child_frame_id = "base_link";
+    odom_trans.child_frame_id = "base_link_raw";
 
     odom_trans.transform.translation.x = odo->getX()/1000.0;
     odom_trans.transform.translation.y = odo->getY()/1000.0;
