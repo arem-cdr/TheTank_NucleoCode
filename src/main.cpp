@@ -153,8 +153,8 @@ ros::Subscriber<std_msgs::Float32MultiArray> sub_robot_geometry("robot_geometry"
 ros::Subscriber<std_msgs::Bool> sub_reset_odo("reset_odo",reset_odo_callback);
 ros::Publisher pub("nav_msgs/odo", &odo_ros);
 ros::Publisher pub_imu("sensor_msgs/Imu", &imu_ros);
-ros::Publisher pub_setpoint_wheel_speeds("calib/setpoint_wheels", &wheelSetpoints);
-ros::Publisher pub_wheel_speeds("calib/wheel_speeds", &readings);
+  // ros::Publisher pub_setpoint_wheel_speeds("calib/setpoint_wheels", &wheelSetpoints);
+  // ros::Publisher pub_wheel_speeds("calib/wheel_speeds", &readings);
 tf::TransformBroadcaster odom_broadcaster;
 tf::TransformBroadcaster lidar_broadcaster;
 // geometry_msgs::TransformStamped lidar_trans;
@@ -216,8 +216,8 @@ void setup() {
   nh.advertise(pub);
   nh.advertise(pub_imu);
   
-  nh.advertise(pub_setpoint_wheel_speeds);
-  nh.advertise(pub_wheel_speeds);
+  // nh.advertise(pub_setpoint_wheel_speeds);
+  // nh.advertise(pub_wheel_speeds);
   timer = millis();
   
   
@@ -296,13 +296,13 @@ void loop() {
 
     pub.publish(&odom);
     pub_imu.publish(&imu_ros);
-    pub_setpoint_wheel_speeds.publish(&wheelSetpoints);
-    std::vector<double> toprint = encoder->GetSpeeds();
-    readings.data[0] = toprint[0];
-    readings.data[1] = toprint[1];
-    readings.data[2] = toprint[2];
-    readings.data[3] = toprint[3];
-    pub_wheel_speeds.publish(&readings);
+    // pub_setpoint_wheel_speeds.publish(&wheelSetpoints);
+    // std::vector<double> toprint = encoder->GetSpeeds();
+    // readings.data[0] = toprint[0];
+    // readings.data[1] = toprint[1];
+    // readings.data[2] = toprint[2];
+    // readings.data[3] = toprint[3];
+    // pub_wheel_speeds.publish(&readings);
     
 
   }
