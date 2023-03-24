@@ -194,7 +194,6 @@ void setup() {
   pinMode(LED_BUILTIN,OUTPUT);
   digitalWrite(LED_BUILTIN,HIGH);
   mot = new BlocMoteurs();
-  delay(3000);
   printVar = 0;
   encoder =  new Encoder4Mot();
   odo = new Odometrie(1000*rate_ms,encoder);
