@@ -168,6 +168,7 @@ void setup() {
   // Serial.begin(115200);
   nh.getHardware()->setBaud(115200);
   nh.initNode();
+  nh.setSpinTimeout(10);
 
 
   wheelSetpoints.data_length=4;
